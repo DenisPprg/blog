@@ -1,13 +1,14 @@
 <?php
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 
-class LuckyController
+class LuckyController extends AbstractController
 {
-    public function test()
+    public function test() : Response
     {
-       echo 'Hello Denis';
-       die;
+       return $this->render('/lucky/lucky.html.twig');
     }
 }
