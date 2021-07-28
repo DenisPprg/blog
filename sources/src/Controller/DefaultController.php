@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -8,8 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends AbstractController
 {
     /**
-     *Example file/actions
-     *
+     * @author Poprugailo Denis <d.poprugailo@piogroup.net>
+     * @return Response
      * @Route("/", name="home_page")
      */
     public function index() : Response
@@ -21,7 +22,9 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * @author Poprugailo Denis <d.poprugailo@piogroup.net>
      * @Route("/about", name="default_about")
+     * @return Response
      */
     public function about()
     {
@@ -29,7 +32,9 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * @author Poprugailo Denis <d.poprugailo@piogroup.net>
      * @Route("/feedback", name="default_feedback")
+     * @return Response
      */
     public function feedback()
     {
