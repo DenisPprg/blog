@@ -2,23 +2,28 @@
 
 namespace App\Controller;
 
+use phpDocumentor\Reflection\DocBlock\Description;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
+use App\Entity\Post;
 
 class DefaultController extends AbstractController
 {
     /**
      * @author Poprugailo Denis <d.poprugailo@piogroup.net>
+     * @Route("/", name="default_index")
      * @return Response
-     * @Route("/", name="home_page")
      */
-    public function index() : Response
+    public function index()
     {
-        $test = 'Title test';
+        $em = $this->getDoctrine()->getManager();
+        $post = $em->getRepository(Post::class)->findAll();
+        /*$post = $em->getRepository(Post::class)->find(2);*/
+
         return $this->render('default/default.html.twig', [
-            'test' => $test,
-            ]);
+            'post' => $post,
+        ]);
     }
 
     /**
@@ -39,5 +44,29 @@ class DefaultController extends AbstractController
     public function feedback()
     {
         return $this->render('default/feedback.html.twig');
+    }
+
+    /**
+     * @author Poprugailo Denis <d.poprugailo@piogroup.net>
+     * @Route("/create", name="default_create")
+     * @return Response
+     */
+    public function createPost() : Response
+    {
+        $published_at = new \DateTime();
+        /*$getName = new name();
+        $getDescription = new descrition();*/
+        $post = new Post();
+        $post->setName('New post#'. rand(0, 99));
+        $post->setDescription('Post description');
+        $post->setPublishedAt(new \DateTime());
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($post);
+        $em->flush();
+        return $this->render('default/post.html.twig', [
+            'name' => $post->getName(),
+            'description' => $post->getDescription(),
+            'published_at' => $published_at->format('Y-m-d'),]);
     }
 }
