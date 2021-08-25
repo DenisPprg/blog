@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use phpDocumentor\Reflection\DocBlock\Description;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,14 +14,13 @@ class DefaultController extends AbstractController
      * @Route("/", name="default_index")
      * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         $em = $this->getDoctrine()->getManager();
-        $post = $em->getRepository(Post::class)->findAll();
-        /*$post = $em->getRepository(Post::class)->find(2);*/
+        $posts = $em->getRepository(Post::class)->findAll();
 
         return $this->render('default/default.html.twig', [
-            'post' => $post,
+            'posts' => $posts,
         ]);
     }
 
@@ -54,8 +52,6 @@ class DefaultController extends AbstractController
     public function createPost() : Response
     {
         $published_at = new \DateTime();
-        /*$getName = new name();
-        $getDescription = new descrition();*/
         $post = new Post();
         $post->setName('New post#'. rand(0, 99));
         $post->setDescription('Post description');
