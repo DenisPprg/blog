@@ -12,7 +12,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class PostController extends AbstractController
 {
     /**
+     * @param Request $request Request
      * @Route("/post/create", name="post_create")
+     * @return Response
      */
     public function create(Request $request) :Response
     {
@@ -30,7 +32,7 @@ class PostController extends AbstractController
             $em->flush();
 
             return $this->redirectToRoute('post_show', [
-                'post'=>$postForm->createView(),
+                'post' => $postForm->createView(),
             ]);
         }
 
@@ -41,7 +43,10 @@ class PostController extends AbstractController
     }
 
     /**
+     * @param Request $request Request
+     * @param Post    $post
      * @Route("/post/edit/{post}", name="post_edit")
+     * @return Response
      */
     public function edit(Request $request, Post $post) : Response
     {
@@ -56,17 +61,18 @@ class PostController extends AbstractController
             $em->flush();
 
             return $this->redirectToRoute('post_show', [
-                'post'=>$postForm->createView(),
+                'post' => $postForm->createView(),
             ]);
         }
 
-        return $this->render('post/edit.html.twig',[
+        return $this->render('post/edit.html.twig', [
             'post' => $post,
             'postForm' => $postForm->createView(),
         ]);
     }
 
     /**
+     * @param Post $post
      * @author Poprugailo Denis <d.poprugailo@piogroup.net>
      * @Route("/post/show/{post}", name="post_show")
      * @return Response

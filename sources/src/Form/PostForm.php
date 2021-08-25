@@ -24,7 +24,7 @@ class PostForm extends AbstractType
             'label' => 'Post name',
         ]);
         $builder->add('description', TextareaType::class);
-        $builder->add('publishedAt', DateType::class,[
+        $builder->add('publishedAt', DateType::class, [
             'widget' => 'single_text',
         ]);
         $builder->add('submit', SubmitType::class);
