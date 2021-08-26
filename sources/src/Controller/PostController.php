@@ -32,7 +32,7 @@ class PostController extends AbstractController
             $em->flush();
 
             return $this->redirectToRoute('post_show', [
-                'post' => $postForm->createView(),
+                'post' => $post->getId(),
             ]);
         }
 
@@ -61,7 +61,7 @@ class PostController extends AbstractController
             $em->flush();
 
             return $this->redirectToRoute('post_show', [
-                'post' => $postForm->createView(),
+                'post' => $post->getId(),
             ]);
         }
 
