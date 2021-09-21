@@ -2,22 +2,34 @@
 
 namespace App\Controller;
 
+use App\Entity\Post;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
-use App\Entity\Post;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DefaultController extends AbstractController
 {
+    public function defaultLocate(){
+        return $this->redirectToRoute('default_index');
+    }
+
     /**
      * @author Poprugailo Denis <d.poprugailo@piogroup.net>
      * @Route("/", name="default_index")
+     * @param  PostRepository $postRepository;
      * @return Response
      */
-    public function index(): Response
+    public function index(PostRepository $postRepository): Response
     {
-        $em = $this->getDoctrine()->getManager();
-        $posts = $em->getRepository(Post::class)->findAll();
+        /*$em = $this->getDoctrine()->getManager();
+        $posts = $em->getRepository(Post::class)->findAll();*/
+        $posts = $postRepository->findAll();
+        $posts = array_reverse($posts);
 
         return $this->render('default/default.html.twig', [
             'posts' => $posts,
