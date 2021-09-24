@@ -4,12 +4,12 @@ namespace App\Controller;
 
 use App\Form\PostForm;
 use App\Entity\Post;
-use App\Service\DownloadPost;
-use App\Form\DownloadForm;
 use App\Service\DownloadPostResponse;
 use App\Service\DownloadPostText;
 use App\Service\DownloadPostHtml;
 use App\Service\DownloadPostInterface;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,30 +87,6 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route("/DownloadFile/{post}/Text", name="DownloadFile_Text")
-     * @param Post                 $post
-     * @param DownloadPostText     $exporterText
-     * @param DownloadPostResponse $downloadPostResponse
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function downloadText(Post $post, DownloadPostText $exporterText, DownloadPostResponse $downloadPostResponse)
-    {
-        return $downloadPostResponse->getResponse($exporterText->getDataFromPost($post));
-    }
-
-    /**
-     * @Route("/DownloadFile/{post}/Html", name="DownloadFile_Html")
-     * @param Post                 $post
-     * @param DownloadPostHtml     $exporterHtml
-     * @param DownloadPostResponse $downloadPostResponse
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function downloadHtml(Post $post, DownloadPostHtml $exporterHtml, DownloadPostResponse $downloadPostResponse)
-    {
-        return $downloadPostResponse->getResponse($exporterHtml->getDataFromPost($post));
-    }
-
-    /**
      * @param Post $post
      * @author Poprugailo Denis <d.poprugailo@piogroup.net>
      * @Route("/post/show/{post}", name="post_show")
@@ -118,11 +94,90 @@ class PostController extends AbstractController
      */
     public function getPost(Post $post): Response
     {
-        $downloadForm = $this->createForm(DownloadForm::class, $post);
+//        $downloadForm = $this->createForm(DownloadForm::class, $post);
 
         return $this->render('post/show.html.twig', [
             'post' => $post,
-            'postForm' => $downloadForm->createView(),
+//            'postForm' => $downloadForm->createView(),
         ]);
     }
+
+    /**
+     * @Route("/download/{post}.csv", name="post_download_csv")
+     *
+     * @param Post            $post
+     * @param PostExporterCsv $exporterHtml
+     *
+     * @return Response
+     */
+    public function downloadCvsAction(Post $post, PostExporterCsv $exporterHtml)
+    {
+        $exporterHtml->setPost($post);
+        $content = $exporterHtml->export();
+
+        $filename = $post->getName() . '.' . $exporterHtml->getFileExtension();
+
+        // Return a response with a specific content
+        $response = new Response($content);
+
+        // Create the disposition of the file
+        $disposition = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $filename
+        );
+
+        // Set the content disposition
+        $response->headers->set('Content-Disposition', $disposition);
+
+        // Dispatch request
+        return $response;
+    }
+
+    /**
+     * @Route("/download/{post}.html", name="post_download_html")
+     *
+     * @param Post             $post
+     * @param PostExporterHtml $exporterHtml
+     *
+     * @return Response
+     */
+    public function downloadHtmlAction(Post $post, PostExporterHtml $exporterHtml)
+    {
+        $exporterHtml->setPost($post);
+        $content = $exporterHtml->export();
+
+        $filename = $post->getName() . '.' . $exporterHtml->getFileExtension();
+
+        // Return a response with a specific content
+        $response = new Response($content);
+
+        // Create the disposition of the file
+        $disposition = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $filename
+        );
+
+        // Set the content disposition
+        $response->headers->set('Content-Disposition', $disposition);
+
+        // Dispatch request
+        return $response;
+    }
+
+    /**
+     * @Route("/download/{post}", name="post_download")
+     *
+     * @param Post                  $post
+     * @param PostExporterInterface $exporter
+     *
+     * @return Response
+     */
+    public function downloadAction(Post $post, PostExporterInterface $exporter)
+    {
+        $exporter->setPost($post);
+        $content = $exporter->export();
+
+        return new Response($content);
+    }
 }
+

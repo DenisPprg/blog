@@ -3,8 +3,8 @@
 {% block body %}
 
     <strong>{{ post.getName() }}</strong>
-    <p>Published: {{ post.getPublishedAt()|date('Y-m-d') }} by <a href="{{ path('post_edit', {post: post.getId}) }}">edit</a> </p>
-    <pre>{{ post.getDescription }}</pre>
+    <p>Published: {{ post.getPublishedAt()|date('Y-m-d') }} by <a href="{{ path('post_edit', {post: post.getId()}) }}">edit</a> </p>
+    <pre>{{ post.getDescription() }}</pre>
 
 {% endblock %}
 

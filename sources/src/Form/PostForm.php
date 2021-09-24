@@ -2,6 +2,8 @@
 
 namespace App\Form;
 
+use App\Entity\Post;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -10,22 +12,25 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-
+/**
+ * Class PostForm
+ * @package App\Form
+ */
 class PostForm extends AbstractType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * PostForm constructor.
-     * @param TranslatorInterface $translator
-     */
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
+//    /**
+//     * @var TranslatorInterface
+//     */
+//    private $translator;
+//
+//    /**
+//     * PostForm constructor.
+//     * @param TranslatorInterface $translator
+//     */
+//    public function __construct(TranslatorInterface $translator)
+//    {
+//        $this->translator = $translator;
+//    }
 
     /**
      * @param FormBuilderInterface $builder
@@ -44,4 +49,15 @@ class PostForm extends AbstractType
         ]);
         $builder->add('submit', SubmitType::class);
     }
+
+//    /**
+//     * @param OptionsResolver $resolver
+//     * @return void
+//     */
+//    public function configureOptions(OptionsResolver $resolver)
+//    {
+//        $resolver->setDefaults(array(
+//            'data_class' => Post::class,
+//        ));
+//    }
 }
